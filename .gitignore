@@ -1,3 +1,7 @@
+## DB Properties
+appliaction.properties
+
+## General
 HELP.md
 .gradle
 build/
