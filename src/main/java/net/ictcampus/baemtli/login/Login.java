@@ -2,8 +2,11 @@ package net.ictcampus.baemtli.login;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import net.ictcampus.baemtli.team.AuthSource;
 import net.ictcampus.baemtli.team.Role;
 import net.ictcampus.baemtli.team.Team;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "login")
@@ -20,14 +23,16 @@ public class Login {
     @Column(name = "PasswordHash") // length = 255 is already default
     private String passwordHash;
 
-    @Enumerated(EnumType.STRING) // Speichert den Namen des Enums statt der Zahl
+    @Enumerated(EnumType.STRING) // Saves name of enum instead of int
     @Column(name = "Role", nullable = false)
     private Role role;
 
+    @Enumerated(EnumType.STRING) // Saves name of enum instead of int
     @Column(name = "AuthSource", nullable = false, length = 10)
-    private String AuthSource = "LOCAL"; // Default value
+    private AuthSource authSource = AuthSource.LOCAL; // Default value
 
     @ManyToOne
-    @JoinColumn(name = "Team_ID", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "Team_ID")
     private Team team;
 }
