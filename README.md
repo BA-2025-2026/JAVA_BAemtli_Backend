@@ -1,3 +1,9 @@
+# Ämtliplantool
+
+The Ämtliplantool is a web application developed specifically for the ICT-Campus of Swiss Post Ltd (Basic Information Technology Training). The primary goal of the project is to digitize and simplify the organization and assignment of daily chores (locally known as "Ämtli") within the ICT-Campus.
+
+As of 2025, planning is often done manually or via decentralized lists. This tool provides a central platform for coaches and trainees to manage data and plan the monthly schedules.
+
 ## For Users: Run this application without building
 If you're just here to run this application, without building it.
 1. Make sure you have Docker Desktop installed and running
