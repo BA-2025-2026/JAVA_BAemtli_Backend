@@ -1,5 +1,6 @@
 ## DB Properties
 application.properties
+.env
 
 ## General
 HELP.md

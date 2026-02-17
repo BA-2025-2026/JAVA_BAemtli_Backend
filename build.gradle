@@ -39,3 +39,8 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+// Fixate name for build file so that docker-compose finds it
+bootJar {
+	archiveFileName = 'baemtli-app.jar'
+}

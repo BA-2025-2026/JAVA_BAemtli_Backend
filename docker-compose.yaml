@@ -1,0 +1,48 @@
+services:
+  db:
+    image: mysql:8.0
+    environment: # uses variables from .env file
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD} # root user password
+      - MYSQL_DATABASE=Baemtli                  # Fallback in case init script fails to create the db
+      - MYSQL_USER=baemtli_user                 # create a user for the backend
+      - MYSQL_PASSWORD=${DB_USER_PASSWORD}      # set password for backend user
+      
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d # executes .sql scripts to setup db and tables
+      - mysql_data:/var/lib/mysql # make sure db data is persistent when docker container restarts
+    ports:
+      - "3306:3306" # Lets developer access the db from outside the container for debugging
+    networks:
+      - backend-net
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      interval: 2s # Check every 2 seconds
+      timeout: 3s
+      retries: 10
+      start_period: 5s # give db some time to boot, before counting errors
+    
+
+  backend:
+    build: . # expects file "Dockerfile" in project root with build instructions
+    image: ghcr.io/ba-2025-2026/java_baemtli_backend:latest # Give a name for the image
+    ports:
+      - "8080:8080" # Important to access Swagger UI API-Documentation for testing the API
+    depends_on:
+      db:
+        condition: service_healthy # waits until db is up and running
+    networks:
+      - backend-net
+    environment: # tell the spring app where to find the db, use variable from .env file
+      - DB_HOST=db
+      - DB_USER=baemtli_user
+      - DB_PASSWORD=${DB_USER_PASSWORD}
+
+
+volumes:
+  mysql_data: # creates a persistent folder on the host system, gets reused when container restarts
+    # no parameters needed, default settings are good enough for this project
+
+
+networks:
+  backend-net:
+    driver: bridge
