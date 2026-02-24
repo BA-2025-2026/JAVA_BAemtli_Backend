@@ -1,6 +1,7 @@
 services:
   db:
     image: mysql:8.0
+    restart: unless-stopped
     environment: # uses variables from .env file
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD} # root user password
       - MYSQL_DATABASE=Baemtli                  # Fallback in case init script fails to create the db
@@ -25,6 +26,7 @@ services:
   backend:
     build: . # expects file "Dockerfile" in project root with build instructions
     image: ghcr.io/ba-2025-2026/java_baemtli_backend:latest # Give a name for the image
+    restart: unless-stopped
     ports:
       - "8080:8080" # Important to access Swagger UI API-Documentation for testing the API
     depends_on:
